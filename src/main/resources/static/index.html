@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Parking Management System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f6f8;
+        }
+
+        header {
+            background: #1f2937;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        header h1 {
+            margin: 0 0 10px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 50px auto;
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: white;
+            width: 350px;
+            padding: 35px;
+            text-align: center;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.12);
+        }
+
+        .card h2 {
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        button {
+            border: none;
+            padding: 13px 25px;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🚗 Parking Management System</h1>
+    <p>Manage Customers and Parking Slots</p>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h2>👤 Customers</h2>
+        <p>Manage parking bookings and customer details.</p>
+
+        <button onclick="location.href='customers.html'">
+            Open Customers
+        </button>
+    </div>
+
+    <div class="card">
+        <h2>🅿️ Parking Slots</h2>
+        <p>View and manage available parking slots.</p>
+
+        <button onclick="location.href='parking-slots.html'">
+            Open Parking Slots
+        </button>
+    </div>
+
+</div>
+
+</body>
+</html>
+```

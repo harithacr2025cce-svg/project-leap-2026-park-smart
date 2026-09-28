@@ -1,0 +1,540 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customer Bookings</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f4f6f8;
+        }
+
+        header {
+            background: #1f2937;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .buttons {
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: white;
+            background: #2563eb;
+            margin-right: 8px;
+        }
+
+        .back {
+            background: #6b7280;
+        }
+
+        .delete {
+            background: #dc2626;
+        }
+
+        .form-section,
+        .booking-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .booking-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .booking-card {
+            background: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .booking-card h3 {
+            margin-top: 0;
+            color: #2563eb;
+        }
+
+        .booking-card p {
+            margin: 8px 0;
+        }
+
+        .message {
+            color: #777;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>👤 Customer Booking Management</h1>
+
+    <p>Parking Management System</p>
+
+</header>
+
+
+<div class="container">
+
+
+    <!-- TOP BUTTONS -->
+
+    <div class="buttons">
+
+        <button
+                class="back"
+                onclick="location.href='index.html'">
+
+            ← Back to Home
+
+        </button>
+
+
+        <button onclick="loadBookings()">
+
+            🔄 Refresh Bookings
+
+        </button>
+
+    </div>
+
+
+
+    <!-- CREATE BOOKING -->
+
+    <div class="form-section">
+
+        <h2>➕ Create New Booking</h2>
+
+        <div class="form">
+
+            <input
+                    type="text"
+                    id="customerName"
+                    placeholder="Customer Name">
+
+
+            <input
+                    type="text"
+                    id="slotNumber"
+                    placeholder="Slot Number">
+
+
+            <input
+                    type="datetime-local"
+                    id="startTime">
+
+
+            <input
+                    type="datetime-local"
+                    id="endTime">
+
+
+            <input
+                    type="datetime-local"
+                    id="actualExitTime">
+
+
+            <input
+                    type="number"
+                    id="penaltyAmount"
+                    placeholder="Penalty Amount">
+
+        </div>
+
+
+        <br>
+
+
+        <button onclick="createBooking()">
+
+            Create Booking
+
+        </button>
+
+    </div>
+
+
+
+    <!-- BOOKING LIST -->
+
+    <div class="booking-section">
+
+        <h2>📋 Customer Bookings</h2>
+
+        <div
+                id="bookingList"
+                class="booking-list">
+
+            <p class="message">
+
+                Click "Refresh Bookings" to load bookings.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<script>
+
+
+    // LOAD BOOKINGS
+
+    function loadBookings() {
+
+        fetch("/bookings")
+
+            .then(function(response) {
+
+                if (!response.ok) {
+
+                    throw new Error("Failed to load bookings");
+
+                }
+
+                return response.json();
+
+            })
+
+            .then(function(data) {
+
+                let html = "";
+
+
+                if (data.length === 0) {
+
+                    html =
+                        "<p class='message'>No bookings found.</p>";
+
+                }
+
+
+                data.forEach(function(booking) {
+
+                    html += `
+
+                    <div class="booking-card">
+
+                        <h3>
+                            👤 ${booking.customerName}
+                        </h3>
+
+                        <p>
+                            <b>Booking ID:</b>
+                            ${booking.id}
+                        </p>
+
+                        <p>
+                            <b>Parking Slot:</b>
+                            ${booking.slotNumber}
+                        </p>
+
+                        <p>
+                            <b>Start Time:</b>
+                            ${booking.startTime}
+                        </p>
+
+                        <p>
+                            <b>End Time:</b>
+                            ${booking.endTime}
+                        </p>
+
+                        <p>
+                            <b>Actual Exit:</b>
+                            ${booking.actualExitTime || "Not exited"}
+                        </p>
+
+                        <p>
+                            <b>Penalty:</b>
+                            ₹${booking.penaltyAmount || 0}
+                        </p>
+
+                        <br>
+
+                        <button
+                            class="delete"
+                            onclick="deleteBooking(${booking.id})">
+
+                            Delete
+
+                        </button>
+
+                    </div>
+
+                `;
+
+                });
+
+
+                document.getElementById("bookingList").innerHTML = html;
+
+            })
+
+            .catch(function(error) {
+
+                console.error(error);
+
+                document.getElementById("bookingList").innerHTML =
+
+                    "<p class='message'>Unable to load bookings.</p>";
+
+            });
+
+    }
+
+
+
+    // CREATE BOOKING
+
+    function createBooking() {
+
+
+        let customerName =
+            document.getElementById("customerName").value;
+
+
+        let slotNumber =
+            document.getElementById("slotNumber").value;
+
+
+        let startTime =
+            document.getElementById("startTime").value;
+
+
+        let endTime =
+            document.getElementById("endTime").value;
+
+
+        let actualExitTime =
+            document.getElementById("actualExitTime").value;
+
+
+        let penaltyAmount =
+            document.getElementById("penaltyAmount").value;
+
+
+
+        if (
+            customerName === "" ||
+            slotNumber === "" ||
+            startTime === "" ||
+            endTime === ""
+        ) {
+
+            alert(
+                "Please enter Customer Name, Slot Number, Start Time and End Time."
+            );
+
+            return;
+
+        }
+
+
+
+        let booking = {
+
+            customerName: customerName,
+
+            slotNumber: slotNumber,
+
+            startTime: startTime,
+
+            endTime: endTime,
+
+            actualExitTime:
+                actualExitTime === ""
+                    ? null
+                    : actualExitTime,
+
+            penaltyAmount:
+                penaltyAmount === ""
+                    ? 0
+                    : Number(penaltyAmount)
+
+        };
+
+
+
+        fetch("/bookings", {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type": "application/json"
+
+            },
+
+            body: JSON.stringify(booking)
+
+        })
+
+
+            .then(function(response) {
+
+                if (!response.ok) {
+
+                    throw new Error("Booking failed");
+
+                }
+
+                return response.json();
+
+            })
+
+
+            .then(function(data) {
+
+                alert(
+                    "Booking created successfully!"
+                );
+
+
+                document.getElementById("customerName").value = "";
+
+                document.getElementById("slotNumber").value = "";
+
+                document.getElementById("startTime").value = "";
+
+                document.getElementById("endTime").value = "";
+
+                document.getElementById("actualExitTime").value = "";
+
+                document.getElementById("penaltyAmount").value = "";
+
+
+                loadBookings();
+
+            })
+
+
+            .catch(function(error) {
+
+                console.error(error);
+
+                alert(
+                    "Error creating booking."
+                );
+
+            });
+
+    }
+
+
+
+    // DELETE BOOKING
+
+    function deleteBooking(id) {
+
+
+        if (
+            !confirm(
+                "Are you sure you want to delete this booking?"
+            )
+        ) {
+
+            return;
+
+        }
+
+
+
+        fetch("/bookings/" + id, {
+
+            method: "DELETE"
+
+        })
+
+
+            .then(function(response) {
+
+                if (!response.ok) {
+
+                    throw new Error("Delete failed");
+
+                }
+
+
+                alert(
+                    "Booking deleted successfully!"
+                );
+
+
+                loadBookings();
+
+            })
+
+
+            .catch(function(error) {
+
+                console.error(error);
+
+                alert(
+                    "Error deleting booking."
+                );
+
+            });
+
+    }
+
+
+</script>
+
+
+</body>
+
+</html>
+```

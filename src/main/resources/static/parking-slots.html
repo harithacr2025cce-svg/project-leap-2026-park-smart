@@ -1,0 +1,538 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkSmart - Parking Slots</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        /* Header */
+        .header {
+            background: #1e3a5f;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 25px;
+            font-size: 15px;
+        }
+
+        .nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* Main */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 35px auto;
+        }
+
+        .page-title {
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            color: #1e3a5f;
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            color: #666;
+        }
+
+        /* Add Slot Card */
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .card h2 {
+            color: #1e3a5f;
+            margin-bottom: 20px;
+            font-size: 21px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #444;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 11px;
+            border: 1px solid #d4d9e0;
+            border-radius: 7px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: #1e3a5f;
+        }
+
+        .button-area {
+            margin-top: 20px;
+        }
+
+        button {
+            border: none;
+            padding: 11px 22px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .add-btn {
+            background: #1e3a5f;
+            color: white;
+        }
+
+        .load-btn {
+            background: #e9eef5;
+            color: #1e3a5f;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        /* Table */
+        .table-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .table-header h2 {
+            color: #1e3a5f;
+            font-size: 21px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #1e3a5f;
+            color: white;
+            padding: 13px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 13px;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .available {
+            color: #16803c;
+            font-weight: bold;
+        }
+
+        .occupied {
+            color: #d62828;
+            font-weight: bold;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            padding: 7px 12px;
+            font-size: 12px;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        /* Responsive */
+        @media (max-width: 800px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 18px;
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .nav a {
+                margin: 0 8px;
+            }
+
+            .container {
+                width: 95%;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="logo">🚗 ParkSmart</div>
+
+    <div class="nav">
+        <a href="index.html">Home</a>
+        <a href="customers.html">Customers</a>
+        <a href="parking-slots.html">Parking Slots</a>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="page-title">
+        <h1>Parking Slot Management</h1>
+        <p>Add, view and manage available parking slots.</p>
+    </div>
+
+    <!-- Add Slot -->
+    <div class="card">
+
+        <h2>Add Parking Slot</h2>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Slot Number</label>
+                <input type="text" id="slotNumber" placeholder="Example: A5">
+            </div>
+
+            <div class="form-group">
+                <label>Status</label>
+                <select id="status">
+                    <option value="Available">Available</option>
+                    <option value="Occupied">Occupied</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" id="location" placeholder="Example: Ground Floor">
+            </div>
+
+            <div class="form-group">
+                <label>Vehicle Number</label>
+                <input type="text" id="vehicleNumber" placeholder="Example: TN38AB1234">
+            </div>
+
+            <div class="form-group">
+                <label>Vehicle Type</label>
+                <select id="vehicleType">
+                    <option value="">Select Vehicle</option>
+                    <option value="Car">Car</option>
+                    <option value="Bike">Bike</option>
+                    <option value="SUV">SUV</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Entry Time</label>
+                <input type="text" id="entryTime" placeholder="Example: 10:30 AM">
+            </div>
+
+        </div>
+
+        <div class="button-area">
+            <button class="add-btn" onclick="addSlot()">Add Slot</button>
+            <button class="load-btn" onclick="loadSlots()">Load Slots</button>
+        </div>
+
+        <div id="message" class="message"></div>
+
+    </div>
+
+
+    <!-- Slots Table -->
+    <div class="table-card">
+
+        <div class="table-header">
+            <h2>Parking Slots</h2>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Slot Number</th>
+                <th>Status</th>
+                <th>Location</th>
+                <th>Vehicle Number</th>
+                <th>Vehicle Type</th>
+                <th>Entry Time</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+
+            <tbody id="slotTableBody">
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // Load all parking slots
+    function loadSlots() {
+
+        fetch('/slots')
+            .then(response => response.json())
+            .then(data => {
+
+                const tableBody = document.getElementById('slotTableBody');
+
+                tableBody.innerHTML = '';
+
+                data.forEach(slot => {
+
+                    const row = document.createElement('tr');
+
+                    const statusClass =
+                        slot.status === 'Available'
+                            ? 'available'
+                            : 'occupied';
+
+                    row.innerHTML = `
+                        <td>${slot.id}</td>
+                        <td>${slot.slotNumber || '-'}</td>
+                        <td class="${statusClass}">
+                            ${slot.status || '-'}
+                        </td>
+                        <td>${slot.location || '-'}</td>
+                        <td>${slot.vehicleNumber || '-'}</td>
+                        <td>${slot.vehicleType || '-'}</td>
+                        <td>${slot.entryTime || '-'}</td>
+                        <td>
+                            <button class="delete-btn"
+                                    onclick="deleteSlot(${slot.id})">
+                                Delete
+                            </button>
+                        </td>
+                    `;
+
+                    tableBody.appendChild(row);
+                });
+
+            })
+            .catch(error => {
+                showMessage("Error loading parking slots", true);
+            });
+    }
+
+
+    // Add new parking slot
+    function addSlot() {
+
+        const slot = {
+
+            slotNumber:
+            document.getElementById('slotNumber').value,
+
+            status:
+            document.getElementById('status').value,
+
+            location:
+            document.getElementById('location').value,
+
+            vehicleNumber:
+                document.getElementById('vehicleNumber').value || null,
+
+            vehicleType:
+                document.getElementById('vehicleType').value || null,
+
+            entryTime:
+                document.getElementById('entryTime').value || null
+        };
+
+
+        if (!slot.slotNumber) {
+
+            showMessage("Please enter slot number", true);
+            return;
+        }
+
+
+        fetch('/slots', {
+
+            method: 'POST',
+
+            headers: {
+                'Content-Type': 'application/json'
+            },
+
+            body: JSON.stringify(slot)
+
+        })
+
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error("Failed to add slot");
+                }
+
+                return response.json();
+
+            })
+
+            .then(data => {
+
+                showMessage("Parking slot added successfully!");
+
+                clearForm();
+
+                loadSlots();
+
+            })
+
+            .catch(error => {
+
+                showMessage("Error adding parking slot", true);
+
+            });
+    }
+
+
+    // Delete parking slot
+    function deleteSlot(id) {
+
+        if (!confirm("Are you sure you want to delete this parking slot?")) {
+            return;
+        }
+
+        fetch('/slots/' + id, {
+
+            method: 'DELETE'
+
+        })
+
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error("Delete failed");
+                }
+
+                showMessage("Parking slot deleted successfully!");
+
+                loadSlots();
+
+            })
+
+            .catch(error => {
+
+                showMessage("Error deleting parking slot", true);
+
+            });
+    }
+
+
+    // Clear form
+    function clearForm() {
+
+        document.getElementById('slotNumber').value = '';
+        document.getElementById('status').value = 'Available';
+        document.getElementById('location').value = '';
+        document.getElementById('vehicleNumber').value = '';
+        document.getElementById('vehicleType').value = '';
+        document.getElementById('entryTime').value = '';
+
+    }
+
+
+    // Message
+    function showMessage(message, error = false) {
+
+        const messageBox = document.getElementById('message');
+
+        messageBox.textContent = message;
+
+        messageBox.style.color = error
+            ? '#dc3545'
+            : '#16803c';
+
+        setTimeout(() => {
+            messageBox.textContent = '';
+        }, 3000);
+    }
+
+
+    // Automatically load slots when page opens
+    window.onload = loadSlots;
+
+</script>
+
+</body>
+</html>
+```

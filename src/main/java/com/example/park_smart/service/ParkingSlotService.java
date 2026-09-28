@@ -9,27 +9,26 @@ import java.util.List;
 @Service
 public class ParkingSlotService {
 
-    private  ParkingSlotRepository repository;
+    private final ParkingSlotRepository parkingSlotRepository;
 
-    public ParkingSlotService(ParkingSlotRepository repository) {
-        this.repository = repository;
-    }
-
-    public ParkingSlot createSlot(ParkingSlot slot) {
-        return repository.save(slot);
+    public ParkingSlotService(ParkingSlotRepository parkingSlotRepository) {
+        this.parkingSlotRepository = parkingSlotRepository;
     }
 
     public List<ParkingSlot> getAllSlots() {
-        return repository.findAll();
+        return parkingSlotRepository.findAll();
     }
 
-    public ParkingSlot updateSlot(Long id, ParkingSlot slot) {
-        slot.setId(id);
-        return repository.save(slot);
+    public ParkingSlot addSlot(ParkingSlot parkingSlot) {
+        return parkingSlotRepository.save(parkingSlot);
+    }
+
+    public ParkingSlot updateSlot(Long id, ParkingSlot parkingSlot) {
+        parkingSlot.setId(id);
+        return parkingSlotRepository.save(parkingSlot);
     }
 
     public void deleteSlot(Long id) {
-        repository.deleteById(id);
+        parkingSlotRepository.deleteById(id);
     }
-
 }
